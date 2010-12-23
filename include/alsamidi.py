@@ -51,6 +51,13 @@ drumnames  = dict( map( lambda e: (int(e[0]), e[1]  ),map( lambda s: s.split('  
 
 queue = 0
 
+def allnoteoffevent(ch):
+    'Returns an ALSA event tuple to be sent directly with alsaseq.output().'
+
+    return ( alsaseq.SND_SEQ_EVENT_CONTROLLER, alsaseq.SND_SEQ_TIME_STAMP_REAL,
+        0, SND_SEQ_QUEUE_DIRECT, ( 0, 0),
+        ( 0, 0 ), ( 0,0 ), ( ch, 0, 0, 0, 123, 64 ) )
+
 def noteevent( ch, key, vel, start, duration ):
     'Returns an ALSA event tuple to be scheduled by alsaseq.output().'
     

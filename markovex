@@ -31,10 +31,15 @@ try:
 	parser = argparse.ArgumentParser(description='Markov chain generative music.')
 	parser.add_argument('-b', '--bpm', help='Override original BPM in play mode', default='0', type=int)
 	parser.add_argument('-c', '--channel', help='Override original midi channel in play mode', default='0', type=int)
+	parser.add_argument('-p', '--port', help='Connect to ALSA sequencer port PORT', default='0', type=int)
 	parser.add_argument('-v', '--verbose', help='Verbose output',action='store_const', const=True,default=False)
 	parser.add_argument('filename', type=file, help='Filename (.mid|.mch)')
 	args = parser.parse_args()
 
+	CH=args.channel
+	if (args.verbose):
+		print "Midi channel",CH
+		
 	#Read transitions probability matrix from file
 	first=True
 	count=0
@@ -56,17 +61,18 @@ try:
 	print "Init sequencer interface..."
 	alsaseq.client( 'MarkovEX', 0, 1, False )
 
-	#For testing purpose only... Conncet to fluidsynth
-	alsaseq.connectto( 0, 131, 0 )
+	if not(args.port==0):
+		print "connecting to ALSA seq port",args.port
+		alsaseq.connectto( 0, args.port, 0 )
 
 	alsaseq.start()
 	while 1:
 		#ev=alsamidi.noteevent(1, 60, 127, 10, 1000)
 		#alsaseq.output( (6, 1, 0, 1, (5, 0), (0, 0), (0, 0), (0, 60, 127, 0, 100)) )
-		ev=alsamidi.noteonevent(1, 60, 127)
+		ev=alsamidi.noteonevent(CH, 60, 127)
 		alsaseq.output(ev)
 		time.sleep(1)
-		ev=alsamidi.noteoffevent(1, 60, 127)
+		ev=alsamidi.noteoffevent(CH, 60, 127)
 		alsaseq.output(ev)
 		time.sleep(1)
 except IOError:
@@ -74,4 +80,6 @@ except IOError:
 	sys.exit(0)
 except KeyboardInterrupt:
 	print "\nKeyboard interrupt. Exiting...\n"
+	ev=alsamidi.allnoteoffevent(CH)
+	alsaseq.output(ev)
 	alsaseq.stop()
