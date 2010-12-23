@@ -1,0 +1,19 @@
+MarkovEX
+Alessio Degani, 2010
+----------------------------------------
+Markov Chain extractor.
+
+
+Reads midi file, extimates the Markov chain of the score process and make generative music playing the extracted markov chain.
+
+usage:
+
+markovex [options] <file.mid|file.mch>
+
+If file is .mid, the program try to extract the markov chain associated to the score and dumps it in to file.mch
+
+If file is .mch, the program instantiate an alsa sequencer port and starts to play a generative score according to markov process stored in file.mch
+
+Options are:
+	-b=<bpm>		Override original bpm.
+	-c=<midi-channel>	In play mode, select the midi channel
