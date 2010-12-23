@@ -3,9 +3,27 @@
 import sys
 import string
 sys.path.append("./include/midi/")
+sys.path.append("./lib/")
 import midi
 import argparse
 from numpy import *
+import alsaseq
+
+def parseEvent(ev):
+	#The serial protocol is very simple:
+	#	n;	note off
+	#	NX;	note X on, where 0<=X<=44
+	
+	data=ev[7]
+	out=""
+	if ev[0]==6:
+		#print "noteON "+str(data[1])
+		out="N"+str(data[1])+";"
+	if ev[0]==7:
+		#print "noteOFF "+str(data[1])
+		out="n;"
+	return out;
+
 
 try:
 	parser = argparse.ArgumentParser(description='Markov chain generative music.')
@@ -33,6 +51,14 @@ try:
 	if (args.verbose):
 		print "Transition probability matrix: \n",table
 	
+	print "Init sequencer interface..."
+	alsaseq.client( 'SeriaMIDI', 1, 0, False )
+	while 1:
+		if alsaseq.inputpending():
+			ev = alsaseq.input()
+			out=parseEvent(ev)
+			if (out):
+				print "->"+out
 except IOError:
 	print "Unable to open file."
 	sys.exit(0)
