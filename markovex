@@ -1,5 +1,22 @@
 #!/usr/bin/python
 
+#    markovex - Markov chain generative music
+#
+#   Copyright (c) 2010 Alessio Degani <alessio.degani@gmail.com>
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>
+
 import sys
 sys.path.append("./include/midi/")
 sys.path.append("./lib/")
@@ -11,23 +28,8 @@ import alsaseq
 import midi
 import alsamidi
 
-def parseEvent(ev):
-	#The serial protocol is very simple:
-	#	n;	note off
-	#	NX;	note X on, where 0<=X<=44
-	
-	data=ev[7]
-	out=""
-	if ev[0]==6:
-		#print "noteON "+str(data[1])
-		out="N"+str(data[1])+";"
-	if ev[0]==7:
-		#print "noteOFF "+str(data[1])
-		out="n;"
-	return out;
-
-
 try:
+	#Argument definition and parsing
 	parser = argparse.ArgumentParser(description='Markov chain generative music.')
 	parser.add_argument('-b', '--bpm', help='Override original BPM in play mode', default='0', type=int)
 	parser.add_argument('-c', '--channel', help='Override original midi channel in play mode', default='0', type=int)
@@ -52,34 +54,55 @@ try:
 				table[count]=line.split(",")
 				count+=1
 	args.filename.close()
-	
 	print "File successful readed."
 	
 	if (args.verbose):
 		print "Transition probability matrix: \n",table
 	
+	#Init ALSA sequencer interface and writable client
 	print "Init sequencer interface..."
-	alsaseq.client( 'MarkovEX', 0, 1, False )
+	#alsaseq.clien(name, input_cli, output_cli, schedule)
+	alsaseq.client( 'MarkovEX', 0, 1, False)
 
+	#Autoconnect to a specified port (if argument -p are passed)
 	if not(args.port==0):
 		print "connecting to ALSA seq port",args.port
 		alsaseq.connectto( 0, args.port, 0 )
-
-	alsaseq.start()
+	
+	start_state=0
+	curr_state=start_state
 	while 1:
-		#ev=alsamidi.noteevent(1, 60, 127, 10, 1000)
-		#alsaseq.output( (6, 1, 0, 1, (5, 0), (0, 0), (0, 0), (0, 60, 127, 0, 100)) )
-		ev=alsamidi.noteonevent(CH, 60, 127)
+		ev=alsamidi.noteonevent(CH, int(table[curr_state,0]), 127)
 		alsaseq.output(ev)
-		time.sleep(1)
-		ev=alsamidi.noteoffevent(CH, 60, 127)
+		time.sleep(0.4)
+		ev=alsamidi.noteoffevent(CH, int(table[curr_state,0]), 127)
 		alsaseq.output(ev)
-		time.sleep(1)
+		p=random.rand(1)[0]
+		if (args.verbose):
+			print "rand:", p
+		if p<table[curr_state,1]: next_state=0
+		elif p<sum(table[curr_state,1:3]): next_state=1
+		elif p<sum(table[curr_state,1:4]): next_state=2
+		curr_state=next_state
+		if (args.verbose):
+			print "next state:", next_state
+		#ev=alsamidi.noteonevent(CH, 60, 127)
+		#alsaseq.output(ev)
+		#time.sleep(1)
+		#ev=alsamidi.noteoffevent(CH, 60, 127)
+		#alsaseq.output(ev)
+		#time.sleep(1)
+
 except IOError:
+	#Error reading File
 	print "Unable to open file."
 	sys.exit(0)
 except KeyboardInterrupt:
+	#CTRL+C interrupt
 	print "\nKeyboard interrupt. Exiting...\n"
+	#ALLNOTEOF
 	ev=alsamidi.allnoteoffevent(CH)
 	alsaseq.output(ev)
+	#Stop sequencing
 	alsaseq.stop()
+	sys.exit(0)
