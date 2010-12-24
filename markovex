@@ -69,6 +69,7 @@ try:
 		print "connecting to ALSA seq port",args.port
 		alsaseq.connectto( 0, args.port, 0 )
 	
+	#init markov chain
 	start_state=0
 	curr_state=start_state
 	while 1:
@@ -77,14 +78,21 @@ try:
 		time.sleep(0.4)
 		ev=alsamidi.noteoffevent(CH, int(table[curr_state,0]), 127)
 		alsaseq.output(ev)
+		
+		#pick random probability (~uniform[0,1])
 		p=random.rand(1)[0]
-		if (args.verbose):
-			print "rand:", p
+		
+		#compute next_state
 		if p<table[curr_state,1]: next_state=0
 		elif p<sum(table[curr_state,1:3]): next_state=1
 		elif p<sum(table[curr_state,1:4]): next_state=2
+		else: next_state=2
+		
+		#evolve...
 		curr_state=next_state
+		
 		if (args.verbose):
+			print "rand:", p
 			print "next state:", next_state
 
 except IOError:
