@@ -86,12 +86,6 @@ try:
 		curr_state=next_state
 		if (args.verbose):
 			print "next state:", next_state
-		#ev=alsamidi.noteonevent(CH, 60, 127)
-		#alsaseq.output(ev)
-		#time.sleep(1)
-		#ev=alsamidi.noteoffevent(CH, 60, 127)
-		#alsaseq.output(ev)
-		#time.sleep(1)
 
 except IOError:
 	#Error reading File
