@@ -28,20 +28,30 @@ import alsaseq
 import midi
 import alsamidi
 
+#Defining default parameter
+defaultCH='0'
+defaultSEQPORT='0'
+defaultBPM='100'
+
 try:
 	#Argument definition and parsing
 	parser = argparse.ArgumentParser(description='Markov chain generative music.')
-	parser.add_argument('-b', '--bpm', help='Override original BPM in play mode', default='0', type=int)
-	parser.add_argument('-c', '--channel', help='Override original midi channel in play mode', default='0', type=int)
-	parser.add_argument('-p', '--port', help='Connect to ALSA sequencer port PORT', default='0', type=int)
+	parser.add_argument('-b', '--bpm', help='Override original BPM in play mode', default=defaultBPM, type=int)
+	parser.add_argument('-c', '--channel', help='Override original midi channel in play mode', default=defaultCH, type=int)
+	parser.add_argument('-p', '--port', help='Connect to ALSA sequencer port PORT', default=defaultSEQPORT, type=int)
 	parser.add_argument('-v', '--verbose', help='Verbose output',action='store_const', const=True,default=False)
 	parser.add_argument('filename', type=file, help='Filename (.mid|.mch)')
 	args = parser.parse_args()
 
+	#Arguments to constants
 	CH=args.channel
-	if (args.verbose):
+	BPM=args.bpm
+	SEQPORT=args.port
+	VERBOSE=args.verbose
+
+	if (VERBOSE):
 		print "Midi channel",CH
-		
+
 	#Read transitions probability matrix from file
 	first=True
 	count=0
@@ -55,20 +65,20 @@ try:
 				count+=1
 	args.filename.close()
 	print "File successful readed."
-	
+
 	if (args.verbose):
 		print "Transition probability matrix: \n",table
-	
+
 	#Init ALSA sequencer interface and writable client
 	print "Init sequencer interface..."
 	#alsaseq.clien(name, input_cli, output_cli, schedule)
 	alsaseq.client( 'MarkovEX', 0, 1, False)
 
 	#Autoconnect to a specified port (if argument -p are passed)
-	if not(args.port==0):
-		print "connecting to ALSA seq port",args.port
-		alsaseq.connectto( 0, args.port, 0 )
-	
+	if not(SEQPORT==0):
+		print "connecting to ALSA seq port",SEQPORT
+		alsaseq.connectto( 0, SEQPORT, 0 )
+
 	#init markov chain
 	start_state=0
 	curr_state=start_state
@@ -81,17 +91,17 @@ try:
 		
 		#pick random probability (~uniform[0,1])
 		p=random.rand(1)[0]
-		
+
 		#compute next_state
 		if p<table[curr_state,1]: next_state=0
 		elif p<sum(table[curr_state,1:3]): next_state=1
 		elif p<sum(table[curr_state,1:4]): next_state=2
 		else: next_state=2
-		
+
 		#evolve...
 		curr_state=next_state
-		
-		if (args.verbose):
+
+		if (VERBOSE):
 			print "rand:", p
 			print "next state:", next_state
 
