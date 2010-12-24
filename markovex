@@ -18,15 +18,17 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 import sys
-sys.path.append("./include/midi/")
-sys.path.append("./lib/")
 sys.path.append("./include/")
+sys.path.append("./include/midi/")
+sys.path.append("./include/markovex")
+sys.path.append("./lib/")
 import argparse
 import time
 from numpy import *
 import alsaseq
 import midi
 import alsamidi
+import markov_synthesis as mks
 
 #Defining default parameter
 defaultCH='0'
@@ -66,9 +68,9 @@ try:
 	args.filename.close()
 	print "File successful readed."
 
-	if (args.verbose):
-		print "Transition probability matrix: \n",table
-
+	if (VERBOSE):
+		mks.printTable(table)
+	sys.exit(0)
 	#Init ALSA sequencer interface and writable client
 	print "Init sequencer interface..."
 	#alsaseq.clien(name, input_cli, output_cli, schedule)
