@@ -38,11 +38,7 @@ def printTable(table):
 	print hr
 	head= "| state\t| "
 	for i in range(numRows):
-		value=table[i,0]
-		noteidx = value % NOTE_PER_OCTAVE
-		octidx = value / OCTAVE_MAX_VALUE
-		name = NOTE_NAMES[int(noteidx)]
-		head=head+name+"\t| "
+		head=head+noteNameFromNum(table[i,0])+"\t| "
 	print head
 	print hr
 	for r in range(numRows):
