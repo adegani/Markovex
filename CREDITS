@@ -1,7 +1,7 @@
 Thanks to:
 
 Patricio Paez <pp@pp.com.mx>
-For alsamidi.py and alsaseq.so ALSA sequencer python bindings
+For include/alsamidi.py and lib/alsaseq.so ALSA sequencer python bindings
 
 Giles Gall <ghall@csh.rit.edu>
-For midi.py
+For include/midi/midi.py
