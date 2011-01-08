@@ -36,14 +36,14 @@ def printTable(table):
 	(numRows,numCols)=shape(table)
 	hr=''.join(repeat("--------",numCols))+"-"
 	print hr
-	head= "| state\t| "
+	head = ["| state\t| "]
 	for i in range(numRows):
-		head=head+noteNameFromNum(table[i,0])+"\t| "
-	print head
+		head.append(noteNameFromNum(table[i,0])+"\t| ")
+	print ''.join(head)
 	print hr
 	for r in range(numRows):
-		buff="| "+noteNameFromNum(table[r,0])+"\t| "
+		buff=["| ", noteNameFromNum(table[r,0]), "\t| "]
 		for c in range(1,numCols):
-			buff=buff + str(table[r,c]) + "\t| "
-		print buff
+			buff.append(str(table[r,c]) + "\t| ")
+		print ''.join(buff)
 	print hr
