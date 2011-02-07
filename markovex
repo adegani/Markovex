@@ -23,12 +23,12 @@ sys.path.append("./include/midi/")
 sys.path.append("./include/markovex")
 sys.path.append("./lib/")
 import argparse
-import time
-from numpy import *
+import string
 import alsaseq
 import midi
 import alsamidi
 import markov_synthesis as mks
+import markov_analysis as mka
 
 #Defining default parameter
 defaultCH='0'
@@ -38,79 +38,96 @@ defaultBPM='100'
 try:
 	#Argument definition and parsing
 	parser = argparse.ArgumentParser(description='Markov chain generative music.')
-	parser.add_argument('-b', '--bpm', help='Override original BPM in play mode', default=defaultBPM, type=int)
-	parser.add_argument('-c', '--channel', help='Override original midi channel in play mode', default=defaultCH, type=int)
+	parser.add_argument('-b', '--bpm', help='Override original BPM (ONLY in play mode)', default=defaultBPM, type=int)
+	parser.add_argument('-c', '--channel', help='Specify midi channel in play mode', default=defaultCH, type=int)
 	parser.add_argument('-p', '--port', help='Connect to ALSA sequencer port PORT', default=defaultSEQPORT, type=int)
 	parser.add_argument('-v', '--verbose', help='Verbose output',action='store_const', const=True,default=False)
-	parser.add_argument('filename', type=file, help='Filename (.mid|.mch)')
+	parser.add_argument('-P', '--play', help='When input midi file, play it immediately',action='store_const', const=True,default=False)
+	parser.add_argument('filename', help='Filename (.mid|.mch)' , type=file)
+	parser.add_argument('-o', '--outfile', help='Output file name (.mch)', default=0, type=str)
 	args = parser.parse_args()
 
 	#Arguments to constants
 	CH=args.channel
 	BPM=args.bpm
 	SEQPORT=args.port
+	
 	VERBOSE=args.verbose
+	#... and global vars VERBOSE on others modules
+	mka.VERBOSE=VERBOSE
+	mks.VERBOSE=VERBOSE
+	
+	PLAYNOW=args.play
+	
+	print "Markovex begins. Welcome to the world of chaos.\n"
 
-	if (VERBOSE):
-		print "Midi channel",CH
-
-	#Read transitions probability matrix from file
-	first=True
-	count=0
-	for line in args.filename:
-		if not (line[0] == "#" or line == ""):	#e' un commento o una riga vuota
-			if (first):	#first line=number of states
-				table=zeros([int(line),int(line)+1],float)
-				first=False
-			else:
-				table[count]=line.split(",")
-				count+=1
-	args.filename.close()
-	print "File successfully read."
-
-	if (VERBOSE):
-		mks.printTable(table)
-	sys.exit(0)
-	#Init ALSA sequencer interface and writable client
-	print "Init sequencer interface..."
-	#alsaseq.clien(name, input_cli, output_cli, schedule)
-	alsaseq.client( 'MarkovEX', 0, 1, False)
-
-	#Autoconnect to a specified port (if argument -p are passed)
-	if not(SEQPORT==0):
-		print "connecting to ALSA seq port",SEQPORT
-		alsaseq.connectto( 0, SEQPORT, 0 )
-
-	#init markov chain
-	start_state=0
-	curr_state=start_state
-	while 1:
-		ev=alsamidi.noteonevent(CH, int(table[curr_state,0]), 127)
-		alsaseq.output(ev)
-		time.sleep(0.4)
-		ev=alsamidi.noteoffevent(CH, int(table[curr_state,0]), 127)
-		alsaseq.output(ev)
+	try:
+		filetype=args.filename.name.split(".")[1]
+	except IndexError:
+		print "File type not allowed"
+		sys.exit(1)
+	
+	if (filetype=="mch"):
+		#Is a chain... read and play it!
 		
-		#pick random probability (~uniform[0,1])
-		p=random.rand(1)[0]
-
-		#compute next_state
-		if p<table[curr_state,1]: next_state=0
-		elif p<sum(table[curr_state,1:3]): next_state=1
-		elif p<sum(table[curr_state,1:4]): next_state=2
-		else: next_state=2
-
-		#evolve...
-		curr_state=next_state
-
+		print "I'm reading the Markov Chain..."
+		
 		if (VERBOSE):
-			print "rand:", p
-			print "next state:", next_state
+			print "Midi channel",CH
 
+		#Read table from file
+		(table,first_state,bpm)=mks.readTable(args.filename)
+		
+		#Init ALSA sequencer interface and writable client
+		print "Init sequencer interface..."
+		alsaseq.client( 'MarkovEX', 0, 1, False)
+
+		#Autoconnect to a specified port (if argument -p are passed)
+		if not(SEQPORT==0):
+			print "connecting to ALSA seq port",SEQPORT
+			alsaseq.connectto( 0, SEQPORT, 0 )
+
+		#Play Markov chain on alsaseq
+		if (BPM): bpm=BPM
+		mks.playTable(table,first_state,bpm,alsaseq,CH)
+		
+	elif (filetype=="mid"):
+		#Midi file: try to extimate the 2nd order markov chain
+		
+		print "I'm parsing the midi file to grab the Markov Chain..."
+		
+		#Parse midi file
+		(noteList, songName, trackName, bpm)=mka.parseMidi(args.filename)
+		
+		#Create transition probability matrix
+		(first_state, table)=mka.createTable(noteList, songName, bpm, CH)
+		
+		if (PLAYNOW):
+			#If PLAYNOW true start to play markov chain
+			print "Chaos begin..."
+			#Init ALSA sequencer interface and writable client
+			print "Init sequencer interface..."
+			alsaseq.client( 'MarkovEX', 0, 1, False)
+
+			#Autoconnect to a specified port (if argument -p are passed)
+			if not(SEQPORT==0):
+				print "connecting to ALSA seq port",SEQPORT
+				alsaseq.connectto( 0, SEQPORT, 0 )
+			
+			if (BPM): bpm=BPM
+			mks.playTable(table,first_state,bpm,alsaseq,CH)
+		else:
+			#otherwise write table to file
+			mka.writeTableToFile(args.outfile,songName,trackName,bpm,table,first_state)
+	else:
+		#File not allowed
+		print "File type not allowed"
+		sys.exit(1)
+	sys.exit(0)
 except IOError:
 	#Error reading File
 	print "Unable to open file."
-	sys.exit(0)
+	sys.exit(1)
 except KeyboardInterrupt:
 	#CTRL+C interrupt
 	print "\nKeyboard interrupt. Exiting...\n"

@@ -30,14 +30,13 @@ def playTable(table,first_state,bpm,alsaseq,CH):
 	#init markov chain
 	start_state=first_state
 	curr_state=start_state
-	print bpm
-	input()
+
 	#populating the list of available notes
 	noteList=table[first_state].keys()
 	
 	#Whait time calculated from BPM
 	tempo=float(1/(float(bpm)/60))
-	input()
+	
 	if (VERBOSE):
 		print "tempo: "+str(tempo)+"\""
 		print "notelist"+str(noteList)

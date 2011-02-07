@@ -73,6 +73,7 @@ def parseMidi(filename):
 			noteList.append(event)
 			if (VERBOSE):
 				print event
+	
 	return (noteList, songName, trackName, tempo)
 
 def writeTableToFile(filename,songname,trackname,bpm, table,first_state):
@@ -105,29 +106,33 @@ def writeTableToFile(filename,songname,trackname,bpm, table,first_state):
 	
 	out_file.close()
 
-def createTable(notes, songName, bpm, CH):
-	#Extimate Markov chain transitions probability matrix sequence from notes array
+def populateTable(walk):
+	#General purpose probability transition matrix creation utility
+	#-> walk is a general random walk step list
 	
-	#List all single note in the score...
+	#Creating a list of any note in the score picked once, and create 2n order states list
+	#List of 2nd order states (x,y)
 	states={}
-	singleNote={}
-	for i in range(0,len(notes)):
-		if (i<len(notes)-1):
-			singleNote[notes[i].pitch]=0
-			state=(notes[i].pitch,notes[i+1].pitch)
+	#List of all available state
+	stateSpace={}
+	for i in range(0,len(walk)):
+		if (i<len(walk)-1):
+			stateSpace[walk[i]]=0
+			state=(walk[i],walk[i+1])
 			states[state]=1;
-	
+
+	print len(stateSpace)
 	#Declaration of transition probability matrix
 	table={}
 	for curState in states:
-		table[curState]=singleNote.copy()
+		table[curState]=stateSpace.copy()
 	
 	first=1
 	#Calculating transition probability matrix
-	for i in range(2,len(notes)):
-		if (i<len(notes)+1):
-			state=(notes[i-2].pitch,notes[i-1].pitch)
-			table[state][notes[i].pitch]+=1
+	for i in range(2,len(walk)):
+		if (i<len(walk)+1):
+			state=(walk[i-2],walk[i-1])
+			table[state][walk[i]]+=1
 			if (first):
 				first_state=state
 				first=0
@@ -144,7 +149,36 @@ def createTable(notes, songName, bpm, CH):
 	
 	if (VERBOSE):
 		print ("First state: (%s|%s)" % (noteNameFromNum(first_state[0]),noteNameFromNum(first_state[1])))
-	
-	printTable(table,first_state)
+		printTable(table,first_state)
 	
 	return (first_state, table)
+
+def createTable(notes, songName, bpm, CH):
+	#Extimate Markov chain transitions probability matrix sequence from notes array
+	
+	#----------------------Markov Chain of note pitch--------------------
+	#Create a list of note-on events only (remove note-off from list notes)
+	noteOn=[]
+	for i in range(0,len(notes)):
+		if not(notes[i].velocity==0):
+			noteOn.append(notes[i].pitch)
+	
+	#Create transition probability matrix for note pitch
+	(pitch_first_state, pitch_table)=populateTable(noteOn)
+	
+	noteDuration=[]
+	#----------------------Markov Chain of note duration--------------------
+	for i in range(0,len(notes)):
+		if not(notes[i].velocity==0):
+			for j in range(i,len(notes)):
+				#Search note-off event of current playing note
+				if (notes[j].velocity==0 and notes[j].pitch==notes[i].pitch):
+					noteDuration.append(notes[j].msdelay-notes[i].msdelay)
+					break
+	input()
+	print noteDuration
+	#Create transition probability matrix for note duration
+	#(duration_first_state, duration_table)=populateTable(noteDuration)
+	input()
+	
+	return (pitch_first_state, pitch_table)
