@@ -45,9 +45,13 @@ def playTable(table,first_state,bpm,alsaseq,CH):
 	ev=alsamidi.noteonevent(CH, int(first_state[0]), 127)
 	alsaseq.output(ev)
 	time.sleep(tempo)
-	ev=alsamidi.noteoffevent(CH, int(first_state[0]), 127)
+	ev=alsamidi.noteoffevent(CH, int(first_state[0]), 0)
+	alsaseq.output(ev)
+	ev=alsamidi.noteonevent(CH, int(first_state[1]), 127)
 	alsaseq.output(ev)
 	time.sleep(tempo)
+	ev=alsamidi.noteoffevent(CH, int(first_state[1]), 0)
+	alsaseq.output(ev)
 	while 1:
 		#pick random probability (~uniform[0,1])
 		rand_p=float(random.rand(1)[0])
@@ -94,6 +98,8 @@ def playTable(table,first_state,bpm,alsaseq,CH):
 		ev=alsamidi.noteonevent(CH, int(noteList[count]), 127)
 		alsaseq.output(ev)
 		time.sleep(tempo)
+		ev=alsamidi.noteoffevent(CH, int(noteList[count]), 0)
+		alsaseq.output(ev)
 
 def readTable(filename):
 	#Read transitions probability matrix from file
