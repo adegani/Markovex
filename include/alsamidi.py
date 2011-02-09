@@ -34,7 +34,7 @@ parameter.  If it is omitted the returned ALSA event will be processed directly
 without queueing by alsaseq.output().  If it is used, the returned ALSA event
 will be queued by alsaseq.output().
 
-All events contain queue value of 0.  This is normally overwritten by 
+All events contain queue value of 0.  This is normally overwritten by
 alsaseq.output() for scheduled events.
 
 All start and duration times are in milliseconds.
@@ -60,7 +60,7 @@ def allnoteoffevent(ch):	#added by axeldamage
 
 def noteevent( ch, key, vel, start, duration ):
     'Returns an ALSA event tuple to be scheduled by alsaseq.output().'
-    
+
     return ( alsaseq.SND_SEQ_EVENT_NOTE, alsaseq.SND_SEQ_TIME_STAMP_REAL,
         0, queue, ( int( start/1000. ), int( start%1000 * 1000000 ) ),
         ( 0, 0 ), ( 0,0 ), ( ch, key, vel, 0, duration ) )
@@ -81,7 +81,7 @@ def noteoffevent( ch, key, vel ):
 
 def pgmchangeevent( ch, value, start=-1 ):
     '''Return an ALSA event tuple to be sent by alsaseq.output().
-    
+
     If start is not used, the event will be sent directly.
     If start is provided, the event will be scheduled in a queue.'''
 
@@ -96,7 +96,7 @@ def pgmchangeevent( ch, value, start=-1 ):
 
 def pitchbendevent( ch, value, start = -1 ):
     '''Return an ALSA event tuple to be sent by alsaseq.output().
-    
+
     If start is not used, the event will be sent directly.
     If start is provided, the event will be scheduled in a queue.'''
 
@@ -111,7 +111,7 @@ def pitchbendevent( ch, value, start = -1 ):
 
 def chanpress( ch, value, start = -1 ):
     '''Return an ALSA event tuple to be sent by alsaseq.output().
-    
+
     If start is not used, the event will be sent directly.
     If start is provided, the event will be scheduled in a queue.'''
 
@@ -134,10 +134,10 @@ def time2tuple( timevalue ):
 
 def modifyevent( event, timedelta=0, ch=0, dest=0, source=0, queue=0, keydelta=0 ):
     '''Returns event with one or more modified fields.
-    
+
     Returns a list of events with the specified field(s)
     set to the value provided.
-    
+
     timedelta  Add to time tuple.
     ch         Set MIDI channel (note and control events only).
     dest       Set destination client and port.
@@ -169,7 +169,7 @@ def modifyevents( events, timedelta=0, ch=0, dest=0, source=0, queue=0, keydelta
     '''Modifies one or more fields in a list of events.'''
     modifiedevents = []
     for event in events:
-        modifiedevents.append( modifyevent( event, timedelta, ch, 
+        modifiedevents.append( modifyevent( event, timedelta, ch,
         dest, source, queue, keydelta ) )
     return modifiedevents
 
@@ -204,7 +204,7 @@ def uniquenotes( events ):
 
 class Seq:
     '''Read and write event tracks in ALSACSV files.
-    
+
     ALSACSV is a text format for storing ALSA events.'''
 
     def __init__( self ):

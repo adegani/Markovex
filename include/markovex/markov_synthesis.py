@@ -2,7 +2,7 @@
 #
 #    Audio synthesis helper function and utilities
 #
-#   Copyright (c) 2010 Alessio Degani <alessio.degani@gmail.com>
+#   Copyright (c) 2010-2011 Alessio Degani <alessio.degani@gmail.com>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -35,13 +35,13 @@ def playNote(note,duration,alsaseq,CH):
 
 def computeNextState(table,curr_state,first_state):
 	#evolve chain computing next state for given current_state
-	
+
 	pdf=[]
 	rand_p=0
-	
+
 	#populating the list of available notes
 	stateList=table[first_state].keys()
-	
+
 	if (curr_state==(0,0)):
 		#first step of chain... play first note deterministicaly
 		next_state=(0,first_state[0])
@@ -50,12 +50,12 @@ def computeNextState(table,curr_state,first_state):
 		next_state=first_state
 	else:
 		#calculate next state
-	
+
 		#pick random probability (~uniform[0,1])
 		rand_p=float(random.rand(1)[0])
 
 		pdf=table[curr_state].values()
-	
+
 		pdf_cumulative=0
 		next=0
 		for p in pdf:
@@ -63,14 +63,14 @@ def computeNextState(table,curr_state,first_state):
 			if (rand_p<=pdf_cumulative):
 				break
 			next+=1
-	
+
 		if (next>len(stateList)-1):
 			#Trap state!! Fall back to start state
 			next_state=first_state
-		
+
 			if (VERBOSE):
 				print bcolors.FAIL+"Trap!!!"+bcolors.ENDC
-		
+
 			#recalculate next note
 			pdf=table[first_state].values()
 			pdf_cumulative=0
@@ -82,7 +82,7 @@ def computeNextState(table,curr_state,first_state):
 				next+=1
 		else:
 			next_state=(curr_state[1],stateList[next])
-	
+
 	#evolve...
 	return next_state
 
@@ -91,23 +91,23 @@ def playTable(pitchTbl,pitchFirstSt,durationTbl,durationFirstSt,bpm,alsaseq,CH):
 	#Note: state (0,0) isn't the first state of the chain, but it's needed to init the chain
 	pitchCurrState=(0,0)
 	durationCurrState=(0,0)
-	
+
 	#Whait time calculated from BPM
 	tempo=float(1/(float(bpm)/60))
-	
+
 	#duration in milliseconds of Thirty-second note(1/32)
 	biscroma=float(1000/(float(bpm)/60))/8
-	
+
 	if (VERBOSE):
 		print "tempo: "+str(tempo)+"\""
-	
+
 	while(1):
 		(pitchNextState)=computeNextState(pitchTbl,pitchCurrState,pitchFirstSt)
 		(durationNextState)=computeNextState(durationTbl,durationCurrState,durationFirstSt)
 		duration=float((durationNextState[1]*biscroma)/1000)
 
 		playNote(pitchNextState[1],duration,alsaseq,CH)
-		
+
 		pitchCurrState=pitchNextState
 		durationCurrState=durationNextState
 		if (VERBOSE):
@@ -141,7 +141,9 @@ def readTable(filename):
 						durationTbl[(buff[0])]=buff[1]
 		filename.close()
 		print "File successfully read."
-	except Exception:
+	except Exception, msg:
 		print "Error reading file "+filename.name
+		print '"',msg,'"'
+		raise
 		sys.exit(1)
 	return (pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm)
