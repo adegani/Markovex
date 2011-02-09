@@ -2,7 +2,7 @@ Source: markovex
 Section: sound
 Priority: optional
 Maintainer: Alessio Degani <alessio.degani@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~), python
+Build-Depends: debhelper (>= 7.0.50~), python, libasound2
 Standards-Version: 3.9.1
 Homepage: http://axeldamage.github.com/Markovex/
 #Vcs-Git: git://git.debian.org/collab-maint/markovex.git
@@ -10,7 +10,7 @@ Homepage: http://axeldamage.github.com/Markovex/
 
 Package: markovex
 Architecture: i386
-Depends: ${shlibs:Depends}, ${misc:Depends}, python
+Depends: ${shlibs:Depends}, ${misc:Depends}, python, libasound2
 Description: Generative music based on Markov chain
  Extract Markov chain for note pitch and duration from midi file and play
  it on alsa sequencer.
