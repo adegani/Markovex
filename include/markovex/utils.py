@@ -2,7 +2,7 @@
 #
 #    General utilities and classes
 #
-#   Copyright (c) 2010 Alessio Degani <alessio.degani@gmail.com>
+#   Copyright (c) 2010-2011 Alessio Degani <alessio.degani@gmail.com>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
