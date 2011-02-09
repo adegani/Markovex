@@ -12,4 +12,5 @@ Package: markovex
 Architecture: i386
 Depends: ${shlibs:Depends}, ${misc:Depends}, python
 Description: Generative music based on Markov chain
- Extract Markov chain for note pitch and duration from midi file and play it on alsa sequencer.
+ Extract Markov chain for note pitch and duration from midi file and play
+ it on alsa sequencer.
