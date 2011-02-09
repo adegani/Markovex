@@ -6,7 +6,7 @@ Markov Chain extractor and player.
 
 Reads midi file, extimates the Markov chain of the score process and make generative music playing the extracted markov chain.
 
-usage:
+Usage:
 
 markovex [options] <file.mid|file.mch>
 
