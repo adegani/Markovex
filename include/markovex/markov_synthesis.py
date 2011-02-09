@@ -141,7 +141,9 @@ def readTable(filename):
 						durationTbl[(buff[0])]=buff[1]
 		filename.close()
 		print "File successfully read."
-	except Exception:
+	except Exception, msg:
 		print "Error reading file "+filename.name
+		print '"',msg,'"'
+		raise
 		sys.exit(1)
 	return (pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm)
