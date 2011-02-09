@@ -42,9 +42,8 @@ try:
 	parser.add_argument('-c', '--channel', help='Specify midi channel in play mode', default=defaultCH, type=int)
 	parser.add_argument('-p', '--port', help='Connect to ALSA sequencer port PORT', default=defaultSEQPORT, type=int)
 	parser.add_argument('-v', '--verbose', help='Verbose output',action='store_const', const=True,default=False)
-	parser.add_argument('-P', '--play', help='When input midi file, play it immediately',action='store_const', const=True,default=False)
 	parser.add_argument('filename', help='Filename (.mid|.mch)' , type=file)
-	parser.add_argument('-o', '--outfile', help='Output file name (.mch)', default=0, type=str)
+	parser.add_argument('-o', '--outfile', help='Output file name (.mch), if you want to save the chain to file instead of playing it', default=0, type=str)
 	args = parser.parse_args()
 
 	#Arguments to constants
@@ -56,8 +55,6 @@ try:
 	#... and global vars VERBOSE on others modules
 	mka.VERBOSE=VERBOSE
 	mks.VERBOSE=VERBOSE
-	
-	PLAYNOW=args.play
 	
 	print "Markovex begins. Welcome to the world of chaos.\n"
 
@@ -76,7 +73,7 @@ try:
 			print "Midi channel",CH
 
 		#Read table from file
-		(table,first_state,bpm)=mks.readTable(args.filename)
+		(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm)=mks.readTable(args.filename)
 		
 		#Init ALSA sequencer interface and writable client
 		print "Init sequencer interface..."
@@ -89,7 +86,7 @@ try:
 
 		#Play Markov chain on alsaseq
 		if (BPM): bpm=BPM
-		mks.playTable(table,first_state,bpm,alsaseq,CH)
+		mks.playTable(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm,alsaseq,CH)
 		
 	elif (filetype=="mid"):
 		#Midi file: try to extimate the 2nd order markov chain
@@ -100,10 +97,13 @@ try:
 		(noteList, songName, trackName, bpm)=mka.parseMidi(args.filename)
 		
 		#Create transition probability matrix
-		(first_state, table)=mka.createTable(noteList, songName, bpm, CH)
+		(pitchFirstState, pitchTbl, durationFirstState, durationTbl)=mka.createTable(noteList, songName, bpm, CH)
 		
-		if (PLAYNOW):
-			#If PLAYNOW true start to play markov chain
+		if (args.outfile):
+			#if outfile provided, write table to file
+			mka.writeTableToFile(args.outfile,songName,trackName,bpm,pitchTbl,pitchFirstState,durationTbl,durationFirstState)
+		else:
+			#otherwise play markov chain
 			print "Chaos begin..."
 			#Init ALSA sequencer interface and writable client
 			print "Init sequencer interface..."
@@ -115,10 +115,7 @@ try:
 				alsaseq.connectto( 0, SEQPORT, 0 )
 			
 			if (BPM): bpm=BPM
-			mks.playTable(table,first_state,bpm,alsaseq,CH)
-		else:
-			#otherwise write table to file
-			mka.writeTableToFile(args.outfile,songName,trackName,bpm,table,first_state)
+			mks.playTable(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm,alsaseq,CH)
 	else:
 		#File not allowed
 		print "File type not allowed"
