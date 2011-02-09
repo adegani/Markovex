@@ -17,3 +17,6 @@ override_dh_auto_install:
 	dh_install markovex usr/share/markovex/
 	dh_install lib usr/share/markovex/
 	dh_install include usr/share/markovex/
+	mkdir -p $(CURDIR)/debian/markovex/usr/bin/
+	ln -fs /usr/share/markovex/markovex $(CURDIR)/debian/markovex/usr/bin/markovex
+
