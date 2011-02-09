@@ -1,0 +1,36 @@
+#!/bin/bash
+
+VER=`git describe --tags`
+REPO_DIR=`pwd`
+
+# Export the file in the repository
+echo -n "Exporting files from the repository... "
+RELEASE_DIR="../markovex-$VER"
+mkdir -p $RELEASE_DIR
+git archive HEAD | tar -x -C $RELEASE_DIR
+cd $RELEASE_DIR
+echo "done."
+
+# Build a .tar.gz archive
+echo -n "Building the compressed archive... "
+cd $RELEASE_DIR
+cd ..
+tar zcf markovex_$VER.orig.tar.gz markovex-$VER/*
+cd - > /dev/null
+echo "done."
+
+# Set the version
+EDITOR=vim dch -v $VER-1~axel0 -D `lsb_release -cs` -m
+
+# Build the debian source package
+debuild -i -S
+
+# Copy the debian changelog back to the GIT repository
+cp debian/changelog $REPO_DIR/debian/
+
+# Clean
+cd $REPO_DIR
+rm -r $RELEASE_DIR
+
+echo "To upload the package, run:"
+echo dput ppa:alessio-degani/ppa ../`ls -1 ../markovex*.dsc | sort | tail -1`
