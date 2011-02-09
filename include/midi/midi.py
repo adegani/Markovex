@@ -1,6 +1,6 @@
 import copy
 import time
-from cStringIO import StringIO 
+from cStringIO import StringIO
 from struct import unpack, pack
 from math import sqrt
 
@@ -93,7 +93,7 @@ class Event(object):
     is_event = classmethod(is_event)
 
     def __str__(self):
-        return "%s @%d %dms C%d T%d" % (self.name, 
+        return "%s @%d %dms C%d T%d" % (self.name,
                             self.tick,
                             self.msdelay,
                             self.channel,
@@ -114,7 +114,7 @@ class Event(object):
     def adjust_msdelay(self, tempo):
         rtick = self.tick - tempo.tick
         self.msdelay = int((rtick * tempo.mpt) + tempo.msdelay)
-     
+
     def encode(self, delta=0, running=False):
         encstr = ''
         if not running:
@@ -141,13 +141,13 @@ class Event(object):
 
     def encode_data(self):
         return self.data
-    
+
 """
 MetaEvent is a special subclass of Event that is not meant to
 be used as a concrete class.  It defines a subset of Events known
 as the Meta  events.
 """
-    
+
 class MetaEvent(Event):
     statusmsg = 0xFF
     metacommand = 0x0
@@ -190,7 +190,7 @@ a helper class that assists you in building MIDI event objects.
 class EventFactory(object):
     EventRegistry = []
     MetaEventRegistry = []
-    
+
     def __init__(self):
         self.RunningStatus = None
         self.RunningTick = 0
@@ -233,7 +233,7 @@ class EventFactory(object):
                 if self.RunningStatus:
                     cached_stsmsg, etype = self.RunningStatus
                     evi = etype()
-                    evi.decode(self.RunningTick, 
+                    evi.decode(self.RunningTick,
                             cached_stsmsg, track, chr(stsmsg))
                     return evi
                 else:
@@ -280,7 +280,7 @@ class ControlChangeEvent(Event):
     statusmsg = 0xB0
     length = 2
     name = 'Control Change'
-    
+
     def __str__(self):
         return "%s [ %s %s ]" % \
                             (super(ControlChangeEvent, self).__str__(),
@@ -332,7 +332,7 @@ class PitchWheelEvent(Event):
                                 hex(ord(self.data[1])))
 
     def decode_data(self):
-        first = ord(self.data[0]) 
+        first = ord(self.data[0])
         second = ord(self.data[1])
         self.value = ((second << 7) | first) - 0x2000
 
@@ -462,7 +462,7 @@ class SetTempoEvent(MetaEvent):
     def __setattr__(self, item, value):
         if item == 'mpqn':
             self.__dict__['mpqn'] = value
-            self.__dict__['tempo'] = float(6e7) / value 
+            self.__dict__['tempo'] = float(6e7) / value
         elif item == 'tempo':
             self.__dict__['tempo'] = value
             self.__dict__['mpqn'] = int(float(6e7) / value)
@@ -725,7 +725,7 @@ class EventStream(object):
         self.trackpool.sort()
         for track in self.tracklist.values():
             track.sort()
-    
+
     def textdump(self):
         for event in self.trackpool:
             print event
@@ -809,21 +809,21 @@ class EventStreamWriter(object):
         self.output = output
         self.midistream = midistream
         self.write_file_header()
-        for track in self.midistream:  
+        for track in self.midistream:
             self.write_track(track)
-    
+
     def write(cls, midistream, output):
         cls(midistream, output)
     write = classmethod(write)
-        
+
     def write_file_header(self):
         # First four bytes are MIDI header
-        packdata = pack(">LHHH", 6,    
-                            self.midistream.format, 
-                            self.midistream.trackcount, 
+        packdata = pack(">LHHH", 6,
+                            self.midistream.format,
+                            self.midistream.trackcount,
                             self.midistream.resolution)
         self.output.write('MThd%s' % packdata)
-            
+
     def write_track_header(self, trklen):
         self.output.write('MTrk%s' % pack(">L", trklen))
 
@@ -838,7 +838,7 @@ class EventStreamWriter(object):
             running = ((smsg == event.statusmsg) and (chn == event.channel))
             buf += event.encode(delta=-last_tick, running=running)
             last_tick = event.tick
-            smsg = event.statusmsg 
+            smsg = event.statusmsg
             chn = event.channel
         self.write_track_header(len(buf))
         self.output.write(buf)
@@ -854,7 +854,7 @@ class EventStreamReader(object):
         cls(instream, outstream)
         return outstream
     read = classmethod(read)
-    
+
     def parse(self, instream, outstream):
         self.midistream = outstream
         if isinstance(instream, str):
@@ -869,12 +869,12 @@ class EventStreamReader(object):
         else:
             raise TypeError, "Expecting file, string, or StringIO"
         self.parse_file_header()
-        for track in range(self.midistream.trackcount):  
+        for track in range(self.midistream.trackcount):
             trksz = self.parse_track_header()
             self.eventfactory = EventFactory()
             self.midistream.add_track()
             self.parse_track(trksz)
-        
+
     def parse_file_header(self):
         # First four bytes are MIDI header
         magic = self.instream.read(4)
@@ -894,7 +894,7 @@ class EventStreamReader(object):
         # in the header are padding
         if hdrsz > DEFAULT_MIDI_HEADER_SIZE:
             self.instream.read(hdrsz - DEFAULT_MIDI_HEADER_SIZE)
-            
+
     def parse_track_header(self):
         # First four bytes are Track header
         magic = self.instream.read(4)
@@ -912,7 +912,7 @@ class EventStreamReader(object):
                 self.midistream.add_event(event)
             except StopIteration:
                 break
-                
+
 def read_varlen(data):
     NEXTBYTE = 1
     value = 0
@@ -956,7 +956,7 @@ def test_varlen():
             print hex(value)
         datum = write_varlen(value)
         newvalue = read_varlen(iter(datum))
-        if value != newvalue: 
+        if value != newvalue:
             hexstr = str.join('', map(hex, map(ord, datum)))
             print "%s != %s (hex: %s)" % (value, newvalue, hexstr)
 

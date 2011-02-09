@@ -45,17 +45,17 @@ def printTable(table,first_state):
 	print "Transition probabilty Matrix"
 	numRows=len(table)
 	numCols=len(table[table.keys()[1]])
-	
+
 	hr='----------------'+''.join(repeat("--------",numCols))+"-"
 	print hr
-	
+
 	#Table header
 	head = ["| Current\Next\t| "]
 	for item in table[table.keys()[1]]:
 		head.append(noteNameFromNum(item)+"\t| ")
 	print ''.join(head)
 	print hr
-	
+
 	#print states an transition prob.
 	for state in table:
 		#Green color to identify the first state
@@ -63,12 +63,12 @@ def printTable(table,first_state):
 			buff=["| "+bcolors.OKGREEN, noteNameFromNum(state[0])+"|"+noteNameFromNum(state[1]), bcolors.ENDC+"\t| "]
 		else:
 			buff=["| ", noteNameFromNum(state[0])+"|"+noteNameFromNum(state[1]), "\t| "]
-		
+
 		notTrap=0
 		for item in table[state]:
 			buff.append(str(table[state][item]) + "\t| ")
 			notTrap+=table[state][item]
-		
+
 		#check if trap state (Prob(escape)=0)
 		if (notTrap):
 			line=''.join(buff)

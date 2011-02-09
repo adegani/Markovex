@@ -50,12 +50,12 @@ try:
 	CH=args.channel
 	BPM=args.bpm
 	SEQPORT=args.port
-	
+
 	VERBOSE=args.verbose
 	#... and global vars VERBOSE on others modules
 	mka.VERBOSE=VERBOSE
 	mks.VERBOSE=VERBOSE
-	
+
 	print "Markovex begins. Welcome to the world of chaos.\n"
 
 	try:
@@ -63,18 +63,18 @@ try:
 	except IndexError:
 		print "File type not allowed"
 		sys.exit(1)
-	
+
 	if (filetype=="mch"):
 		#Is a chain... read and play it!
-		
+
 		print "I'm reading the Markov Chain..."
-		
+
 		if (VERBOSE):
 			print "Midi channel",CH
 
 		#Read table from file
 		(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm)=mks.readTable(args.filename)
-		
+
 		#Init ALSA sequencer interface and writable client
 		print "Init sequencer interface..."
 		alsaseq.client( 'MarkovEX', 0, 1, False)
@@ -87,18 +87,18 @@ try:
 		#Play Markov chain on alsaseq
 		if (BPM): bpm=BPM
 		mks.playTable(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm,alsaseq,CH)
-		
+
 	elif (filetype=="mid"):
 		#Midi file: try to extimate the 2nd order markov chain
-		
+
 		print "I'm parsing the midi file to grab the Markov Chain..."
-		
+
 		#Parse midi file
 		(noteList, songName, trackName, bpm)=mka.parseMidi(args.filename)
-		
+
 		#Create transition probability matrix
 		(pitchFirstState, pitchTbl, durationFirstState, durationTbl)=mka.createTable(noteList, songName, bpm, CH)
-		
+
 		if (args.outfile):
 			#if outfile provided, write table to file
 			mka.writeTableToFile(args.outfile,songName,trackName,bpm,pitchTbl,pitchFirstState,durationTbl,durationFirstState)
@@ -113,7 +113,7 @@ try:
 			if not(SEQPORT==0):
 				print "connecting to ALSA seq port",SEQPORT
 				alsaseq.connectto( 0, SEQPORT, 0 )
-			
+
 			if (BPM): bpm=BPM
 			mks.playTable(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm,alsaseq,CH)
 	else:

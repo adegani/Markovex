@@ -475,7 +475,7 @@ class snd_seq_addr_t(_object):
     __swig_setmethods__["port"] = _sequencer_alsa.snd_seq_addr_t_port_set
     __swig_getmethods__["port"] = _sequencer_alsa.snd_seq_addr_t_port_get
     if _newclass:port = property(_sequencer_alsa.snd_seq_addr_t_port_get, _sequencer_alsa.snd_seq_addr_t_port_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_addr_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -498,7 +498,7 @@ class snd_seq_connect_t(_object):
     __swig_setmethods__["dest"] = _sequencer_alsa.snd_seq_connect_t_dest_set
     __swig_getmethods__["dest"] = _sequencer_alsa.snd_seq_connect_t_dest_get
     if _newclass:dest = property(_sequencer_alsa.snd_seq_connect_t_dest_get, _sequencer_alsa.snd_seq_connect_t_dest_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_connect_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -519,7 +519,7 @@ class snd_seq_real_time_t(_object):
     __swig_setmethods__["tv_nsec"] = _sequencer_alsa.snd_seq_real_time_t_tv_nsec_set
     __swig_getmethods__["tv_nsec"] = _sequencer_alsa.snd_seq_real_time_t_tv_nsec_get
     if _newclass:tv_nsec = property(_sequencer_alsa.snd_seq_real_time_t_tv_nsec_get, _sequencer_alsa.snd_seq_real_time_t_tv_nsec_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_real_time_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -540,7 +540,7 @@ class snd_seq_timestamp_t(_object):
     __swig_setmethods__["time"] = _sequencer_alsa.snd_seq_timestamp_t_time_set
     __swig_getmethods__["time"] = _sequencer_alsa.snd_seq_timestamp_t_time_get
     if _newclass:time = property(_sequencer_alsa.snd_seq_timestamp_t_time_get, _sequencer_alsa.snd_seq_timestamp_t_time_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_timestamp_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -583,7 +583,7 @@ class snd_seq_ev_note_t(_object):
     __swig_setmethods__["duration"] = _sequencer_alsa.snd_seq_ev_note_t_duration_set
     __swig_getmethods__["duration"] = _sequencer_alsa.snd_seq_ev_note_t_duration_get
     if _newclass:duration = property(_sequencer_alsa.snd_seq_ev_note_t_duration_get, _sequencer_alsa.snd_seq_ev_note_t_duration_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_note_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -610,7 +610,7 @@ class snd_seq_ev_ctrl_t(_object):
     __swig_setmethods__["value"] = _sequencer_alsa.snd_seq_ev_ctrl_t_value_set
     __swig_getmethods__["value"] = _sequencer_alsa.snd_seq_ev_ctrl_t_value_get
     if _newclass:value = property(_sequencer_alsa.snd_seq_ev_ctrl_t_value_get, _sequencer_alsa.snd_seq_ev_ctrl_t_value_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_ctrl_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -628,7 +628,7 @@ class snd_seq_ev_raw8_t(_object):
     __swig_setmethods__["d"] = _sequencer_alsa.snd_seq_ev_raw8_t_d_set
     __swig_getmethods__["d"] = _sequencer_alsa.snd_seq_ev_raw8_t_d_get
     if _newclass:d = property(_sequencer_alsa.snd_seq_ev_raw8_t_d_get, _sequencer_alsa.snd_seq_ev_raw8_t_d_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_raw8_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -646,7 +646,7 @@ class snd_seq_ev_raw32_t(_object):
     __swig_setmethods__["d"] = _sequencer_alsa.snd_seq_ev_raw32_t_d_set
     __swig_getmethods__["d"] = _sequencer_alsa.snd_seq_ev_raw32_t_d_get
     if _newclass:d = property(_sequencer_alsa.snd_seq_ev_raw32_t_d_get, _sequencer_alsa.snd_seq_ev_raw32_t_d_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_raw32_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -667,7 +667,7 @@ class snd_seq_ev_ext_t(_object):
     __swig_setmethods__["ptr"] = _sequencer_alsa.snd_seq_ev_ext_t_ptr_set
     __swig_getmethods__["ptr"] = _sequencer_alsa.snd_seq_ev_ext_t_ptr_get
     if _newclass:ptr = property(_sequencer_alsa.snd_seq_ev_ext_t_ptr_get, _sequencer_alsa.snd_seq_ev_ext_t_ptr_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_ext_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -694,7 +694,7 @@ class snd_seq_instr_t(_object):
     __swig_setmethods__["prg"] = _sequencer_alsa.snd_seq_instr_t_prg_set
     __swig_getmethods__["prg"] = _sequencer_alsa.snd_seq_instr_t_prg_get
     if _newclass:prg = property(_sequencer_alsa.snd_seq_instr_t_prg_get, _sequencer_alsa.snd_seq_instr_t_prg_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_instr_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -718,7 +718,7 @@ class snd_seq_ev_sample_t(_object):
     __swig_setmethods__["prg"] = _sequencer_alsa.snd_seq_ev_sample_t_prg_set
     __swig_getmethods__["prg"] = _sequencer_alsa.snd_seq_ev_sample_t_prg_get
     if _newclass:prg = property(_sequencer_alsa.snd_seq_ev_sample_t_prg_get, _sequencer_alsa.snd_seq_ev_sample_t_prg_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_sample_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -736,7 +736,7 @@ class snd_seq_ev_cluster_t(_object):
     __swig_setmethods__["cluster"] = _sequencer_alsa.snd_seq_ev_cluster_t_cluster_set
     __swig_getmethods__["cluster"] = _sequencer_alsa.snd_seq_ev_cluster_t_cluster_get
     if _newclass:cluster = property(_sequencer_alsa.snd_seq_ev_cluster_t_cluster_get, _sequencer_alsa.snd_seq_ev_cluster_t_cluster_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_cluster_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -766,7 +766,7 @@ class snd_seq_ev_volume_t(_object):
     __swig_setmethods__["du"] = _sequencer_alsa.snd_seq_ev_volume_t_du_set
     __swig_getmethods__["du"] = _sequencer_alsa.snd_seq_ev_volume_t_du_get
     if _newclass:du = property(_sequencer_alsa.snd_seq_ev_volume_t_du_get, _sequencer_alsa.snd_seq_ev_volume_t_du_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_volume_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -787,7 +787,7 @@ class snd_seq_ev_loop_t(_object):
     __swig_setmethods__["end"] = _sequencer_alsa.snd_seq_ev_loop_t_end_set
     __swig_getmethods__["end"] = _sequencer_alsa.snd_seq_ev_loop_t_end_get
     if _newclass:end = property(_sequencer_alsa.snd_seq_ev_loop_t_end_get, _sequencer_alsa.snd_seq_ev_loop_t_end_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_loop_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -810,7 +810,7 @@ class snd_seq_ev_sample_control_t(_object):
     if _newclass:unused = property(_sequencer_alsa.snd_seq_ev_sample_control_t_unused_get, _sequencer_alsa.snd_seq_ev_sample_control_t_unused_set)
     __swig_getmethods__["param"] = _sequencer_alsa.snd_seq_ev_sample_control_t_param_get
     if _newclass:param = property(_sequencer_alsa.snd_seq_ev_sample_control_t_param_get)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_sample_control_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -849,7 +849,7 @@ class snd_seq_ev_sample_control_t_param(_object):
     __swig_setmethods__["raw8"] = _sequencer_alsa.snd_seq_ev_sample_control_t_param_raw8_set
     __swig_getmethods__["raw8"] = _sequencer_alsa.snd_seq_ev_sample_control_t_param_raw8_get
     if _newclass:raw8 = property(_sequencer_alsa.snd_seq_ev_sample_control_t_param_raw8_get, _sequencer_alsa.snd_seq_ev_sample_control_t_param_raw8_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_sample_control_t_param(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -867,7 +867,7 @@ class snd_seq_ev_instr_begin_t(_object):
     __swig_setmethods__["timeout"] = _sequencer_alsa.snd_seq_ev_instr_begin_t_timeout_set
     __swig_getmethods__["timeout"] = _sequencer_alsa.snd_seq_ev_instr_begin_t_timeout_get
     if _newclass:timeout = property(_sequencer_alsa.snd_seq_ev_instr_begin_t_timeout_get, _sequencer_alsa.snd_seq_ev_instr_begin_t_timeout_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_instr_begin_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -888,7 +888,7 @@ class snd_seq_result_t(_object):
     __swig_setmethods__["result"] = _sequencer_alsa.snd_seq_result_t_result_set
     __swig_getmethods__["result"] = _sequencer_alsa.snd_seq_result_t_result_get
     if _newclass:result = property(_sequencer_alsa.snd_seq_result_t_result_get, _sequencer_alsa.snd_seq_result_t_result_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_result_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -909,7 +909,7 @@ class snd_seq_queue_skew_t(_object):
     __swig_setmethods__["base"] = _sequencer_alsa.snd_seq_queue_skew_t_base_set
     __swig_getmethods__["base"] = _sequencer_alsa.snd_seq_queue_skew_t_base_get
     if _newclass:base = property(_sequencer_alsa.snd_seq_queue_skew_t_base_get, _sequencer_alsa.snd_seq_queue_skew_t_base_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_queue_skew_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -932,7 +932,7 @@ class snd_seq_ev_queue_control_t(_object):
     if _newclass:unused = property(_sequencer_alsa.snd_seq_ev_queue_control_t_unused_get, _sequencer_alsa.snd_seq_ev_queue_control_t_unused_set)
     __swig_getmethods__["param"] = _sequencer_alsa.snd_seq_ev_queue_control_t_param_get
     if _newclass:param = property(_sequencer_alsa.snd_seq_ev_queue_control_t_param_get)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_queue_control_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -965,7 +965,7 @@ class snd_seq_ev_queue_control_t_param(_object):
     __swig_setmethods__["d8"] = _sequencer_alsa.snd_seq_ev_queue_control_t_param_d8_set
     __swig_getmethods__["d8"] = _sequencer_alsa.snd_seq_ev_queue_control_t_param_d8_get
     if _newclass:d8 = property(_sequencer_alsa.snd_seq_ev_queue_control_t_param_d8_get, _sequencer_alsa.snd_seq_ev_queue_control_t_param_d8_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_ev_queue_control_t_param(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -1003,7 +1003,7 @@ class snd_seq_event_t(_object):
     if _newclass:dest = property(_sequencer_alsa.snd_seq_event_t_dest_get, _sequencer_alsa.snd_seq_event_t_dest_set)
     __swig_getmethods__["data"] = _sequencer_alsa.snd_seq_event_t_data_get
     if _newclass:data = property(_sequencer_alsa.snd_seq_event_t_data_get)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_event_t(*args)
         try: self.this.append(this)
         except: self.this = this
@@ -1054,7 +1054,7 @@ class snd_seq_event_t_data(_object):
     __swig_setmethods__["sample"] = _sequencer_alsa.snd_seq_event_t_data_sample_set
     __swig_getmethods__["sample"] = _sequencer_alsa.snd_seq_event_t_data_sample_get
     if _newclass:sample = property(_sequencer_alsa.snd_seq_event_t_data_sample_get, _sequencer_alsa.snd_seq_event_t_data_sample_set)
-    def __init__(self, *args): 
+    def __init__(self, *args):
         this = _sequencer_alsa.new_snd_seq_event_t_data(*args)
         try: self.this.append(this)
         except: self.this = this
