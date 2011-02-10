@@ -1,3 +1,9 @@
+markovex (0.11-7-gabea153-1~axel0) maverick; urgency=low
+
+  * fixed some bugs in note-off detection and readTable
+
+ -- Alessio Degani <alessio.degani@gmail.com>  Thu, 10 Feb 2011 16:09:56 +0100
+
 markovex (0.11-5-g5a3f48a-1~axel0) maverick; urgency=low
 
   * Import path fixes 

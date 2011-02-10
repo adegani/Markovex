@@ -33,4 +33,4 @@ cd $REPO_DIR
 rm -r $RELEASE_DIR
 
 echo "To upload the package, run:"
-echo dput ppa:alessio-degani/ppa `ls -1 ../markovex*.dsc | sort | tail -1`
+echo dput ppa:alessio-degani/ppa `ls -1 ../markovex*_source.changes | sort | tail -1`
