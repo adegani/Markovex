@@ -44,14 +44,14 @@ def printTable(table,first_state):
 
 	print "Transition probabilty Matrix"
 	numRows=len(table)
-	numCols=len(table[table.keys()[1]])
+	numCols=len(table[table.keys()[0]])
 
 	hr='----------------'+''.join(repeat("--------",numCols))+"-"
 	print hr
 
 	#Table header
 	head = ["| Current\Next\t| "]
-	for item in table[table.keys()[1]]:
+	for item in table[table.keys()[0]]:
 		head.append(noteNameFromNum(item)+"\t| ")
 	print ''.join(head)
 	print hr

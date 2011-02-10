@@ -73,6 +73,13 @@ def parseMidi(filename):
 			noteList.append(event)
 			if (VERBOSE):
 				print event
+		if (event.name=="Note Off"):
+			#Convert note off event in note on with velocity=0
+			event.name="Note On"
+			event.velocity=0
+			noteList.append(event)
+			if (VERBOSE):
+				print event
 
 	return (noteList, songName, trackName, tempo)
 
@@ -85,7 +92,7 @@ def writeTableToFile(filename,songname,trackname,bpm,pitchTbl,pitchFirstState,du
 
 	out_file = open(filename,"w")
 	numRows=len(pitchTbl)
-	numCols=len(pitchTbl[pitchTbl.keys()[1]])
+	numCols=len(pitchTbl[pitchTbl.keys()[0]])
 
 	#Header->General parameters
 	head=(songname,trackname,bpm,pitchFirstState,durationFirstState,numRows,numCols)
@@ -121,13 +128,13 @@ def populateTable(walk):
 	states={}
 	#List of all available state
 	stateSpace={}
+
 	for i in range(0,len(walk)):
+		stateSpace[walk[i]]=0
 		if (i<len(walk)-1):
-			stateSpace[walk[i]]=0
 			state=(walk[i],walk[i+1])
 			states[state]=1;
-
-	print len(stateSpace)
+			
 	#Declaration of transition probability matrix
 	table={}
 	for curState in states:
@@ -186,8 +193,8 @@ def createTable(notes, songName, bpm, CH):
 					quantized=int(round(millis/biscroma))
 					if not(quantized==0 or quantized==1): noteDuration.append(quantized)
 					break
-
 	#Create transition probability matrix for note duration
+
 	(duration_first_state, duration_table)=populateTable(noteDuration)
 
 	return (pitch_first_state, pitch_table, duration_first_state, duration_table)
