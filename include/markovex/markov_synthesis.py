@@ -130,7 +130,7 @@ def readTable(filename):
 					first=False
 				else:
 					#Read the rest of the table
-					if (count<=rows):
+					if (count<rows):
 						#pitch table
 						buff=eval(line)
 						pitchTbl[(buff[0])]=buff[1]
@@ -146,4 +146,9 @@ def readTable(filename):
 		print '"',msg,'"'
 		raise
 		sys.exit(1)
+	
+	if (VERBOSE):
+		printTable(pitchTbl,pitchFirstState)
+		printTable(durationTbl,durationFirstState)
+		
 	return (pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm)
