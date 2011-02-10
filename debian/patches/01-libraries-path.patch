@@ -1,0 +1,21 @@
+Fixes libraries path in .deb package.
+Author: Andrea Piccinelli
+diff --git a/markovex b/markovex
+index a34a10f..e7a020e 100755
+--- a/markovex
++++ b/markovex
+@@ -18,10 +18,10 @@
+ #   along with this program.  If not, see <http://www.gnu.org/licenses/>
+ 
+ import sys
+-sys.path.append("./include/")
+-sys.path.append("./include/midi/")
+-sys.path.append("./include/markovex")
+-sys.path.append("./lib/")
++sys.path.append("/usr/share/markovex/include/")
++sys.path.append("/usr/share/markovex/include/midi/")
++sys.path.append("/usr/share/markovex/include/markovex")
++sys.path.append("/usr/share/markovex/lib/")
+ import argparse
+ import string
+ import alsaseq
