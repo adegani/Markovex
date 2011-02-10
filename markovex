@@ -16,12 +16,15 @@
 #
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>
-
 import sys
-sys.path.append("./include/")
-sys.path.append("./include/midi/")
-sys.path.append("./include/markovex")
-sys.path.append("./lib/")
+
+import os.path
+root_dir = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(root_dir + "/include/")
+sys.path.append(root_dir + "/include/midi/")
+sys.path.append(root_dir + "/include/markovex")
+sys.path.append(root_dir + "/lib/")
+
 import argparse
 import string
 import alsaseq
