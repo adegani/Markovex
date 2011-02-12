@@ -62,7 +62,8 @@ try:
 	print "Markovex begins. Welcome to the world of chaos.\n"
 
 	try:
-		filetype=args.filename.name.split(".")[1]
+		filename = os.path.basename(args.filename.name);
+		filetype=filename.split(".")[1]
 	except IndexError:
 		print "File type not allowed"
 		sys.exit(1)
