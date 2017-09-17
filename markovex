@@ -27,16 +27,27 @@ sys.path.append(root_dir + "/lib/")
 
 import argparse
 import string
-import alsaseq
 import midi
-import alsamidi
 import markov_synthesis as mks
 import markov_analysis as mka
+from pyalsa import alsaseq
 
 #Defining default parameter
 defaultCH='0'
 defaultSEQPORT='0'
 defaultBPM='100'
+
+def allNoteOff(sequencer):
+	for n in range(1,127):
+		event = alsaseq.SeqEvent(alsaseq.SEQ_EVENT_NOTEOFF)
+		event.set_data({'note.note' : n, 'note.velocity' : 64})
+		sequencer.output_event(event)
+		sequencer.drain_output()
+
+def initSequencer(sequencer):
+	sequencer.clientname = 'MarkovEX'
+	sequencer.mode = alsaseq.SEQ_BLOCK
+	port_id = sequencer.create_simple_port("MIDI out", alsaseq.SEQ_PORT_TYPE_APPLICATION,alsaseq.SEQ_PORT_CAP_READ | alsaseq.SEQ_PORT_CAP_SUBS_READ)
 
 try:
 	#Argument definition and parsing
@@ -59,6 +70,8 @@ try:
 	mka.VERBOSE=VERBOSE
 	mks.VERBOSE=VERBOSE
 
+	sequencer = alsaseq.Sequencer()
+
 	print "Markovex begins. Welcome to the world of chaos.\n"
 
 	try:
@@ -80,16 +93,11 @@ try:
 
 		#Init ALSA sequencer interface and writable client
 		print "Init sequencer interface..."
-		alsaseq.client( 'MarkovEX', 0, 1, False)
+		initSequencer(sequencer)
 
-		#Autoconnect to a specified port (if argument -p are passed)
-		if not(SEQPORT==0):
-			print "connecting to ALSA seq port",SEQPORT
-			alsaseq.connectto( 0, SEQPORT, 0 )
-
-		#Play Markov chain on alsaseq
 		if (BPM): bpm=BPM
-		mks.playTable(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm,alsaseq,CH)
+		mks.playTable(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm,sequencer,CH)
+
 
 	elif (filetype=="mid"):
 		#Midi file: try to extimate the 2nd order markov chain
@@ -110,15 +118,11 @@ try:
 			print "Chaos begin..."
 			#Init ALSA sequencer interface and writable client
 			print "Init sequencer interface..."
-			alsaseq.client( 'MarkovEX', 0, 1, False)
-
-			#Autoconnect to a specified port (if argument -p are passed)
-			if not(SEQPORT==0):
-				print "connecting to ALSA seq port",SEQPORT
-				alsaseq.connectto( 0, SEQPORT, 0 )
+			initSequencer(sequencer)
 
 			if (BPM): bpm=BPM
-			mks.playTable(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm,alsaseq,CH)
+			mks.playTable(pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm,sequencer,CH)
+
 	else:
 		#File not allowed
 		print "File type not allowed"
@@ -132,8 +136,7 @@ except KeyboardInterrupt:
 	#CTRL+C interrupt
 	print "\nKeyboard interrupt. Exiting...\n"
 	#ALLNOTEOF
-	ev=alsamidi.allnoteoffevent(CH)
-	alsaseq.output(ev)
+	allNoteOff(sequencer)
 	#Stop sequencing
-	alsaseq.stop()
+	del sequencer
 	sys.exit(0)

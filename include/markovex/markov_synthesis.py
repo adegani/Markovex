@@ -18,20 +18,26 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 import sys
-import alsaseq
-import alsamidi
 import time
 from utils import *
+import pyalsa
+from pyalsa import alsaseq
 
 global VERBOSE
 
-def playNote(note,duration,alsaseq,CH):
+def playNote(note,duration,sequencer,CH):
 	#Play a note for a given duration
-	ev=alsamidi.noteonevent(CH, int(note), 127)
-	alsaseq.output(ev)
+	event = alsaseq.SeqEvent(alsaseq.SEQ_EVENT_NOTEON)
+	event.set_data({'note.note' : note, 'note.velocity' : 64})
+	sequencer.output_event(event)
+	sequencer.drain_output()
+
 	time.sleep(duration)
-	ev=alsamidi.noteoffevent(CH, int(note), 0)
-	alsaseq.output(ev)
+
+	event = alsaseq.SeqEvent(alsaseq.SEQ_EVENT_NOTEOFF)
+	event.set_data({'note.note' : note, 'note.velocity' : 64})
+	sequencer.output_event(event)
+	sequencer.drain_output()
 
 def computeNextState(table,curr_state,first_state):
 	#evolve chain computing next state for given current_state
@@ -146,9 +152,9 @@ def readTable(filename):
 		print '"',msg,'"'
 		raise
 		sys.exit(1)
-	
+
 	if (VERBOSE):
 		printTable(pitchTbl,pitchFirstState)
 		printTable(durationTbl,durationFirstState)
-		
+
 	return (pitchTbl,pitchFirstState,durationTbl,durationFirstState,bpm)

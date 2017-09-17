@@ -1,3 +1,9 @@
+markovex (0.11-10-g15d3ac5-1~axel0) maverick; urgency=low
+
+  * fixed issue #5 (split extension of input file name) 
+
+ -- Alessio Degani <alessio.degani@gmail.com>  Mon, 14 Feb 2011 17:30:00 +0100
+
 markovex (0.11-7-gabea153-1~axel0) maverick; urgency=low
 
   * fixed some bugs in note-off detection and readTable
