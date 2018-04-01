@@ -3,6 +3,9 @@ MarkovEX
 ----------------------------------------
 Markov Chain extractor and player.
 
+Prerequisites:
+PyAlsa: sudo apt-get install python-pyalsa
+
 
 Reads midi file, extimates the Markov chain of the score process and make generative music playing the extracted markov chain.
 
